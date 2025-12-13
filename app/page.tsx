@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { GraduationCap, BookOpen, Users, Award } from 'lucide-react';
+import { GraduationCap, BookOpen, Award } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 
 export default function HomePage() {
