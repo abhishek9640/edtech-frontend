@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState } from 'react';
@@ -44,9 +45,10 @@ export default function LoginPage() {
                 router.push('/dashboard');
                 router.refresh();
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
             toast.error('An error occurred', {
-                description: error.message,
+                description: errorMessage,
             });
         } finally {
             setIsLoading(false);
@@ -101,7 +103,7 @@ export default function LoginPage() {
                             )}
                         </Button>
                         <p className="text-sm text-center text-muted-foreground">
-                            Don't have an account?{' '}
+                            Don&apos;t have an account?{' '}
                             <Link href="/register" className="text-primary hover:underline font-medium">
                                 Sign up
                             </Link>
