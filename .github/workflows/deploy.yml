@@ -137,5 +137,5 @@ jobs:
         with:
           urls: |
             https://edtech-assignment-frontend.vercel.app
-          uploadArtifacts: true
+          uploadArtifacts: false
           temporaryPublicStorage: true
