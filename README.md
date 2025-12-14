@@ -12,6 +12,13 @@ A full-featured Learning Management System (LMS) built with Next.js 16, TypeScri
 - **Frontend**: [https://edtech-assignment-frontend.vercel.app/](https://edtech-assignment-frontend.vercel.app/)
 - **Backend API**: [https://edtech-backend-ry6i.onrender.com](https://edtech-backend-ry6i.onrender.com)
 
+### 🔑 Demo Accounts
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Student** | abhishekgupta9640@gmail.com | 123456789 |
+| **Instructor/Admin** | admin@gmail.com | 123456789 |
+
 ## ✨ Features
 
 ### 👨‍🎓 For Students
