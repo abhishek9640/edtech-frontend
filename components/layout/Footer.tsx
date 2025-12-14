@@ -42,16 +42,16 @@ export default function Footer() {
                     <p className="mt-2">
                         Made with ❤️ by{' '}
                         <a
-                            href="https://github.com/yourusername"
+                            href="https://github.com/abhishek9640"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-primary hover:underline"
                         >
-                            Your Name
+                            Abhishek Kumar
                         </a>
                         {' | '}
                         <a
-                            href="https://linkedin.com/in/yourprofile"
+                            href="https://www.linkedin.com/in/abhishek-54-kr/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-primary hover:underline"
