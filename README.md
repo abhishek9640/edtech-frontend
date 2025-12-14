@@ -9,8 +9,8 @@ A full-featured Learning Management System (LMS) built with Next.js 16, TypeScri
 
 ## 🚀 Live Demo
 
-- **Frontend**: [https://edtech-frontend.vercel.app](https://edtech-frontend.vercel.app)
-- **Backend API**: [https://edtech-backend.onrender.com](https://edtech-backend.onrender.com)
+- **Frontend**: [https://edtech-assignment-frontend.vercel.app/](https://edtech-assignment-frontend.vercel.app/)
+- **Backend API**: [https://edtech-backend-ry6i.onrender.com](https://edtech-backend-ry6i.onrender.com)
 
 ## ✨ Features
 
@@ -87,7 +87,7 @@ edtech-assignment-frontend/
 
 - Node.js 18+ 
 - npm or yarn
-- Backend API running (see [Backend Repository](https://github.com/abhishek9640/edtech-backend))
+- Backend API running (see [Backend Repository](https://edtech-backend-ry6i.onrender.com))
 
 ### Installation
 
@@ -109,8 +109,8 @@ edtech-assignment-frontend/
    
    Update `.env.local` with your configuration:
    ```env
-   NEXT_PUBLIC_API_URL=http://localhost:5000/api
-   NEXTAUTH_URL=http://localhost:3000
+   NEXT_PUBLIC_API_URL=https://edtech-backend-ry6i.onrender.com/api/v1
+   NEXTAUTH_URL=https://edtech-assignment-frontend.vercel.app
    NEXTAUTH_SECRET=your-secret-key
    ```
 
@@ -120,7 +120,7 @@ edtech-assignment-frontend/
    ```
 
 5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+   Navigate to [https://edtech-assignment-frontend.vercel.app](https://edtech-assignment-frontend.vercel.app)
 
 ## 📝 Available Scripts
 
