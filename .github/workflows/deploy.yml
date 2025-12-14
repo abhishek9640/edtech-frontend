@@ -116,7 +116,7 @@ jobs:
       - name: Deployment notification
         run: |
           echo "🚀 Production deployment successful!"
-          echo "URL: https://your-app.vercel.app"
+          echo "URL: https://edtech-assignment-frontend.vercel.app"
       
       - name: Create deployment badge
         run: |
@@ -136,6 +136,6 @@ jobs:
         uses: treosh/lighthouse-ci-action@v10
         with:
           urls: |
-            https://your-app.vercel.app
+            https://edtech-assignment-frontend.vercel.app
           uploadArtifacts: true
           temporaryPublicStorage: true
