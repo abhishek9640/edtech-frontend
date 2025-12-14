@@ -40,6 +40,7 @@ export default function CreateCoursePage() {
                 description: formData.description,
                 category: formData.category,
                 price: parseFloat(formData.price),
+                duration: parseFloat(formData.duration),
                 level: formData.level as 'beginner' | 'intermediate' | 'advanced',
                 thumbnail: formData.thumbnail || undefined,
                 tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(Boolean) : undefined,
@@ -147,7 +148,7 @@ export default function CreateCoursePage() {
 
                                 <div className="grid md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <Label htmlFor="price">Price (USD) *</Label>
+                                        <Label htmlFor="price">Price (INR) *</Label>
                                         <Input
                                             id="price"
                                             type="number"

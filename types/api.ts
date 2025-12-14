@@ -111,6 +111,7 @@ export interface CreateCoursePayload {
     description: string;
     category: string;
     price: number;
+    duration: number;
     level: 'beginner' | 'intermediate' | 'advanced';
     thumbnail?: string;
     tags?: string[];

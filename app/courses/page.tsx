@@ -174,7 +174,7 @@ export default function CoursesPage() {
                                             <div>
                                                 <p className="text-sm text-gray-500">By {course.instructor.name}</p>
                                                 <p className="text-2xl font-bold text-primary">
-                                                    {course.price === 0 ? 'Free' : `$${course.price}`}
+                                                    {course.price === 0 ? 'Free' : `₹${course.price}`}
                                                 </p>
                                             </div>
                                         </div>
