@@ -27,6 +27,7 @@ export default function CreateCoursePage() {
         duration: '',
         level: '',
         thumbnail: '',
+        tags: '',
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -41,6 +42,7 @@ export default function CreateCoursePage() {
                 price: parseFloat(formData.price),
                 level: formData.level as 'beginner' | 'intermediate' | 'advanced',
                 thumbnail: formData.thumbnail || undefined,
+                tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(Boolean) : undefined,
             };
 
             await api.courses.create(courseData);
@@ -183,6 +185,17 @@ export default function CreateCoursePage() {
                                         value={formData.thumbnail}
                                         onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
                                     />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="tags">Tags (Optional)</Label>
+                                    <Input
+                                        id="tags"
+                                        placeholder="react, javascript, web development (comma-separated)"
+                                        value={formData.tags}
+                                        onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                                    />
+                                    <p className="text-sm text-gray-500">Separate tags with commas</p>
                                 </div>
 
                                 <div className="flex gap-4">

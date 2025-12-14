@@ -30,6 +30,7 @@ export default function EditCoursePage() {
         duration: '',
         level: '',
         thumbnail: '',
+        tags: '',
     });
 
     const fetchCourse = useCallback(async () => {
@@ -45,6 +46,7 @@ export default function EditCoursePage() {
                 duration: course.duration.toString(),
                 level: course.level,
                 thumbnail: course.thumbnail || '',
+                tags: course.tags?.join(', ') || '',
             });
         } catch {
             toast.error('Failed to load course');
@@ -70,6 +72,7 @@ export default function EditCoursePage() {
                 price: parseFloat(formData.price),
                 level: formData.level as 'beginner' | 'intermediate' | 'advanced',
                 thumbnail: formData.thumbnail || undefined,
+                tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()).filter(Boolean) : undefined,
             };
 
             await api.courses.update(params.id as string, courseData);
@@ -275,6 +278,17 @@ export default function EditCoursePage() {
                                         value={formData.thumbnail}
                                         onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
                                     />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="tags">Tags (Optional)</Label>
+                                    <Input
+                                        id="tags"
+                                        placeholder="react, javascript, web development (comma-separated)"
+                                        value={formData.tags}
+                                        onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                                    />
+                                    <p className="text-sm text-gray-500">Separate tags with commas</p>
                                 </div>
 
                                 <div className="flex gap-4">
