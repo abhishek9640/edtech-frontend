@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { api } from '@/lib/api';
@@ -15,44 +12,48 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Navbar from '@/components/layout/Navbar';
 import { Star, Users, Clock, BookOpen, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import type { Course, Lesson } from '@/types/api';
 
+/**
+ * Course detail page with lessons and enrollment
+ */
 export default function CourseDetailPage() {
     const params = useParams();
     const router = useRouter();
     const { data: session } = useSession();
-    const [course, setCourse] = useState<any>(null);
-    const [lessons, setLessons] = useState<any[]>([]);
+    const [course, setCourse] = useState<Course | null>(null);
+    const [lessons, setLessons] = useState<Lesson[]>([]);
     const [loading, setLoading] = useState(true);
     const [enrolling, setEnrolling] = useState(false);
     const [isEnrolled, setIsEnrolled] = useState(false);
 
-    useEffect(() => {
-        fetchCourse();
-        checkEnrollment();
-    }, [params.id]);
-
-    const fetchCourse = async () => {
+    const fetchCourse = useCallback(async () => {
         try {
             const response = await api.courses.getOne(params.id as string);
             setCourse(response.data.data.course);
             setLessons(response.data.data.lessons);
-        } catch (error) {
+        } catch {
             toast.error('Failed to load course');
         } finally {
             setLoading(false);
         }
-    };
+    }, [params.id]);
 
-    const checkEnrollment = async () => {
+    const checkEnrollment = useCallback(async () => {
         if (!session) return;
 
         try {
             const response = await api.enrollments.getEnrollment(params.id as string);
             setIsEnrolled(!!response.data);
-        } catch (error) {
-            // Not enrolled
+        } catch {
+            // Not enrolled - this is expected
         }
-    };
+    }, [session, params.id]);
+
+    useEffect(() => {
+        fetchCourse();
+        checkEnrollment();
+    }, [fetchCourse, checkEnrollment]);
 
     const handleEnroll = async () => {
         if (!session) {
@@ -66,8 +67,9 @@ export default function CourseDetailPage() {
             toast.success('Successfully enrolled!');
             setIsEnrolled(true);
             router.push(`/dashboard/courses/${params.id}`);
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Failed to enroll');
+        } catch (error: unknown) {
+            const err = error as { response?: { data?: { message?: string } } };
+            toast.error(err.response?.data?.message || 'Failed to enroll');
         } finally {
             setEnrolling(false);
         }
@@ -224,7 +226,7 @@ export default function CourseDetailPage() {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="space-y-2">
-                                        {lessons.map((lesson: any, index: number) => (
+                                        {lessons.map((lesson, index) => (
                                             <div
                                                 key={lesson._id}
                                                 className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
@@ -253,7 +255,7 @@ export default function CourseDetailPage() {
                                 <CardContent>
                                     {course.reviews && course.reviews.length > 0 ? (
                                         <div className="space-y-4">
-                                            {course.reviews.map((review: any) => (
+                                            {course.reviews.map((review) => (
                                                 <div key={review._id} className="border-b pb-4 last:border-0">
                                                     <div className="flex items-center gap-2 mb-2">
                                                         <div className="flex">
@@ -261,8 +263,8 @@ export default function CourseDetailPage() {
                                                                 <Star
                                                                     key={i}
                                                                     className={`h-4 w-4 ${i < review.rating
-                                                                            ? 'fill-yellow-400 text-yellow-400'
-                                                                            : 'text-gray-300'
+                                                                        ? 'fill-yellow-400 text-yellow-400'
+                                                                        : 'text-gray-300'
                                                                         }`}
                                                                 />
                                                             ))}

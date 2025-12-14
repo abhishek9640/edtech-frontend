@@ -12,15 +12,16 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import { api } from '@/lib/api';
+import type { RegisterPayload } from '@/types/api';
 
 export default function RegisterPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<RegisterPayload>({
         name: '',
         email: '',
         password: '',
-        role: 'user',
+        role: 'student',
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -96,14 +97,14 @@ export default function RegisterPage() {
                             <Label htmlFor="role">I want to</Label>
                             <Select
                                 value={formData.role}
-                                onValueChange={(value) => setFormData({ ...formData, role: value })}
+                                onValueChange={(value) => setFormData({ ...formData, role: value as 'student' | 'instructor' })}
                                 disabled={isLoading}
                             >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select your role" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="user">Learn (Student)</SelectItem>
+                                    <SelectItem value="student">Learn (Student)</SelectItem>
                                     <SelectItem value="instructor">Teach (Instructor)</SelectItem>
                                 </SelectContent>
                             </Select>

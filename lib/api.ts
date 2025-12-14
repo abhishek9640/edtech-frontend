@@ -1,48 +1,136 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axiosInstance from './axios';
+import type {
+    RegisterPayload,
+    LoginPayload,
+    AuthResponse,
+    User,
+    Course,
+    CourseListParams,
+    CourseListResponse,
+    CourseDetailResponse,
+    CreateCoursePayload,
+    ReviewPayload,
+    Lesson,
+    CreateLessonPayload,
+    LessonListResponse,
+    EnrollmentListResponse,
+    EnrollmentResponse,
+    ApiResponse,
+} from '@/types/api';
 
+/**
+ * API client with typed methods for all endpoints
+ */
 export const api = {
-  // Auth
-  auth: {
-    register: (data: any) => axiosInstance.post('/auth/register', data),
-    login: (data: any) => axiosInstance.post('/auth/login', data),
-    getMe: () => axiosInstance.get('/auth/me'),
-  },
+    // ============ Auth ============
+    auth: {
+        /** Register a new user */
+        register: (data: RegisterPayload) =>
+            axiosInstance.post<AuthResponse>('/auth/register', data),
 
-  // Courses
-  courses: {
-    getAll: (params?: any) => axiosInstance.get('/courses', { params }),
-    getOne: (id: string) => axiosInstance.get(`/courses/${id}`),
-    create: (data: any) => axiosInstance.post('/courses', data),
-    update: (id: string, data: any) => axiosInstance.put(`/courses/${id}`, data),
-    delete: (id: string) => axiosInstance.delete(`/courses/${id}`),
-    addReview: (id: string, data: any) => axiosInstance.post(`/courses/${id}/reviews`, data),
-    togglePublish: (id: string) => axiosInstance.patch(`/courses/${id}/publish`),
-    getInstructorCourses: () => axiosInstance.get('/courses/instructor/my-courses'),
-  },
+        /** Login with email and password */
+        login: (data: LoginPayload) =>
+            axiosInstance.post<AuthResponse>('/auth/login', data),
 
-  // Enrollments
-  enrollments: {
-    enroll: (courseId: string) => axiosInstance.post(`/enrollments/${courseId}/enroll`),
-    getMyEnrollments: () => axiosInstance.get('/enrollments/my-enrollments'),
-    getEnrollment: (courseId: string) => axiosInstance.get(`/enrollments/${courseId}`),
-    completeLesson: (courseId: string, lessonId: string) =>
-      axiosInstance.post(`/enrollments/${courseId}/lessons/${lessonId}/complete`),
-    unenroll: (courseId: string) => axiosInstance.delete(`/enrollments/${courseId}/unenroll`),
-  },
+        /** Get current authenticated user */
+        getMe: () =>
+            axiosInstance.get<ApiResponse<{ user: User }>>('/auth/me'),
+    },
 
-  // Lessons
-  lessons: {
-    getCourseLessons: (courseId: string) => axiosInstance.get(`/lessons/courses/${courseId}/lessons`),
-    getOne: (id: string) => axiosInstance.get(`/lessons/${id}`),
-    create: (courseId: string, data: any) => axiosInstance.post(`/lessons/courses/${courseId}/lessons`, data),
-    update: (id: string, data: any) => axiosInstance.put(`/lessons/${id}`, data),
-    delete: (id: string) => axiosInstance.delete(`/lessons/${id}`),
-  },
+    // ============ Courses ============
+    courses: {
+        /** Get all courses with optional filters */
+        getAll: (params?: CourseListParams) =>
+            axiosInstance.get<CourseListResponse>('/courses', { params }),
 
-  // Users
-  users: {
-    getProfile: (id: string) => axiosInstance.get(`/users/${id}`),
-    updateProfile: (data: any) => axiosInstance.put('/users/profile', data),
-  },
+        /** Get a single course by ID with its lessons */
+        getOne: (id: string) =>
+            axiosInstance.get<CourseDetailResponse>(`/courses/${id}`),
+
+        /** Create a new course (instructor only) */
+        create: (data: CreateCoursePayload) =>
+            axiosInstance.post<ApiResponse<{ course: Course }>>('/courses', data),
+
+        /** Update an existing course */
+        update: (id: string, data: Partial<CreateCoursePayload>) =>
+            axiosInstance.put<ApiResponse<{ course: Course }>>(`/courses/${id}`, data),
+
+        /** Delete a course */
+        delete: (id: string) =>
+            axiosInstance.delete<ApiResponse<null>>(`/courses/${id}`),
+
+        /** Add a review to a course */
+        addReview: (id: string, data: ReviewPayload) =>
+            axiosInstance.post<ApiResponse<{ review: Course['reviews'] }>>(`/courses/${id}/reviews`, data),
+
+        /** Toggle course publish status */
+        togglePublish: (id: string) =>
+            axiosInstance.patch<ApiResponse<{ course: Course }>>(`/courses/${id}/publish`),
+
+        /** Get instructor's own courses */
+        getInstructorCourses: () =>
+            axiosInstance.get<CourseListResponse>('/courses/instructor/my-courses'),
+    },
+
+    // ============ Enrollments ============
+    enrollments: {
+        /** Enroll in a course */
+        enroll: (courseId: string) =>
+            axiosInstance.post<EnrollmentResponse>(`/enrollments/${courseId}/enroll`),
+
+        /** Get current user's enrollments */
+        getMyEnrollments: () =>
+            axiosInstance.get<EnrollmentListResponse>('/enrollments/my-enrollments'),
+
+        /** Get enrollment details for a specific course */
+        getEnrollment: (courseId: string) =>
+            axiosInstance.get<EnrollmentResponse>(`/enrollments/${courseId}`),
+
+        /** Mark a lesson as complete */
+        completeLesson: (courseId: string, lessonId: string) =>
+            axiosInstance.post<EnrollmentResponse>(
+                `/enrollments/${courseId}/lessons/${lessonId}/complete`
+            ),
+
+        /** Unenroll from a course */
+        unenroll: (courseId: string) =>
+            axiosInstance.delete<ApiResponse<null>>(`/enrollments/${courseId}/unenroll`),
+    },
+
+    // ============ Lessons ============
+    lessons: {
+        /** Get all lessons for a course */
+        getCourseLessons: (courseId: string) =>
+            axiosInstance.get<LessonListResponse>(`/lessons/courses/${courseId}/lessons`),
+
+        /** Get a single lesson by ID */
+        getOne: (id: string) =>
+            axiosInstance.get<ApiResponse<{ lesson: Lesson }>>(`/lessons/${id}`),
+
+        /** Create a new lesson for a course */
+        create: (courseId: string, data: CreateLessonPayload) =>
+            axiosInstance.post<ApiResponse<{ lesson: Lesson }>>(
+                `/lessons/courses/${courseId}/lessons`,
+                data
+            ),
+
+        /** Update an existing lesson */
+        update: (id: string, data: Partial<CreateLessonPayload>) =>
+            axiosInstance.put<ApiResponse<{ lesson: Lesson }>>(`/lessons/${id}`, data),
+
+        /** Delete a lesson */
+        delete: (id: string) =>
+            axiosInstance.delete<ApiResponse<null>>(`/lessons/${id}`),
+    },
+
+    // ============ Users ============
+    users: {
+        /** Get a user's public profile */
+        getProfile: (id: string) =>
+            axiosInstance.get<ApiResponse<{ user: User }>>(`/users/${id}`),
+
+        /** Update current user's profile */
+        updateProfile: (data: Partial<Pick<User, 'name' | 'avatar'>>) =>
+            axiosInstance.put<ApiResponse<{ user: User }>>('/users/profile', data),
+    },
 };

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import type { NextAuthConfig } from 'next-auth';
@@ -19,15 +18,15 @@ export const authConfig: NextAuthConfig = {
                     }
 
                     const response = await api.auth.login({
-                        email: credentials.email,
-                        password: credentials.password,
+                        email: credentials.email as string,
+                        password: credentials.password as string,
                     });
 
                     const { user, accessToken } = response.data.data;
 
                     if (user && accessToken) {
                         return {
-                            id: user.id,
+                            id: user._id,
                             email: user.email,
                             name: user.name,
                             role: user.role,
@@ -36,8 +35,9 @@ export const authConfig: NextAuthConfig = {
                     }
 
                     return null;
-                } catch (error: any) {
-                    console.error('Auth error:', error.response?.data || error.message);
+                } catch (error: unknown) {
+                    const err = error as { response?: { data?: unknown }; message?: string };
+                    console.error('Auth error:', err.response?.data || err.message);
                     return null;
                 }
             },

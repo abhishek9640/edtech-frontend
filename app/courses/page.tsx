@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { api } from '@/lib/api';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,25 +11,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import Navbar from '@/components/layout/Navbar';
-import Link from 'next/link';
 import { Search, Star, Users, Clock } from 'lucide-react';
+import type { Course, CourseListParams } from '@/types/api';
 
-interface Course {
-    _id: string;
-    title: string;
-    description: string;
-    category: string;
-    price: number;
-    thumbnail: string;
-    level: string;
-    rating: number;
-    enrollmentCount: number;
-    duration: number;
-    instructor: {
-        name: string;
-    };
-}
-
+/**
+ * Courses listing page with filtering and search
+ */
 export default function CoursesPage() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
@@ -38,14 +24,10 @@ export default function CoursesPage() {
     const [category, setCategory] = useState('all');
     const [level, setLevel] = useState('all');
 
-    useEffect(() => {
-        fetchCourses();
-    }, [category, level]);
-
-    const fetchCourses = async () => {
+    const fetchCourses = useCallback(async () => {
         try {
             setLoading(true);
-            const params: any = {};
+            const params: CourseListParams = {};
             if (category !== 'all') params.category = category;
             if (level !== 'all') params.level = level;
             if (search) params.search = search;
@@ -57,7 +39,11 @@ export default function CoursesPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [category, level, search]);
+
+    useEffect(() => {
+        fetchCourses();
+    }, [fetchCourses]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -143,10 +129,13 @@ export default function CoursesPage() {
                                 <Card key={course._id} className="hover:shadow-lg transition-shadow overflow-hidden">
                                     <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 relative">
                                         {course.thumbnail ? (
-                                            <img
+                                            <Image
                                                 src={course.thumbnail}
                                                 alt={course.title}
-                                                className="w-full h-full object-cover"
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                className="object-cover"
+                                                priority={false}
                                             />
                                         ) : (
                                             <div className="flex items-center justify-center h-full text-white text-6xl font-bold">

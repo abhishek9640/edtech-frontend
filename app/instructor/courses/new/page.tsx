@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { useState } from 'react';
@@ -15,6 +14,7 @@ import Navbar from '@/components/layout/Navbar';
 import { toast } from 'sonner';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import type { CreateCoursePayload } from '@/types/api';
 
 export default function CreateCoursePage() {
     const router = useRouter();
@@ -34,13 +34,16 @@ export default function CreateCoursePage() {
         setLoading(true);
 
         try {
-            const courseData = {
-                ...formData,
+            const courseData: CreateCoursePayload = {
+                title: formData.title,
+                description: formData.description,
+                category: formData.category,
                 price: parseFloat(formData.price),
-                duration: parseFloat(formData.duration),
+                level: formData.level as 'beginner' | 'intermediate' | 'advanced',
+                thumbnail: formData.thumbnail || undefined,
             };
 
-            const response = await api.courses.create(courseData);
+            await api.courses.create(courseData);
             toast.success('Course created successfully!');
             router.push(`/instructor`);
         } catch (error: any) {

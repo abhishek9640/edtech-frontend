@@ -1,16 +1,15 @@
-'use client';
-
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { GraduationCap, BookOpen, Award } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
+import { HeroButtons, CTASection } from '@/components/home/ClientComponents';
 
+/**
+ * Home Page - Server Component
+ * Static content is server-rendered for better SEO and performance
+ * Interactive elements are handled by client islands
+ */
 export default function HomePage() {
-  const { status } = useSession();
-  const isAuthenticated = status === 'authenticated';
-
   return (
     <>
       <Navbar />
@@ -25,21 +24,13 @@ export default function HomePage() {
               <p className="text-xl md:text-2xl text-gray-600 mb-8">
                 Access world-class courses, learn from expert instructors, and advance your career
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {!isAuthenticated && (
-                  <Button size="lg" asChild className="text-lg">
-                    <Link href="/register">Start Learning Free</Link>
-                  </Button>
-                )}
-                <Button size="lg" variant="outline" asChild className="text-lg">
-                  <Link href="/courses">Explore Courses</Link>
-                </Button>
-              </div>
+              {/* Client Island: Auth-aware buttons */}
+              <HeroButtons />
             </div>
           </div>
         </section>
 
-        {/* Stats Section */}
+        {/* Stats Section - Static, server-rendered */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -63,7 +54,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* Features Section - Static, server-rendered */}
         <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
@@ -111,22 +102,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* CTA Section */}
-        {!isAuthenticated && (
-          <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-            <div className="container mx-auto px-4 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Start Learning?</h2>
-              <p className="text-xl mb-8 opacity-90">
-                Join thousands of students already learning on EduLearn
-              </p>
-              <Button size="lg" variant="secondary" asChild className="text-lg">
-                <Link href="/register">Create Free Account</Link>
-              </Button>
-            </div>
-          </section>
-        )}
+        {/* Client Island: Auth-aware CTA Section */}
+        <CTASection />
 
-        {/* Footer */}
+        {/* Footer - Static, server-rendered */}
         <footer className="bg-gray-900 text-gray-300 py-12">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-4 gap-8 mb-8">
